@@ -1,0 +1,12 @@
+2023-07-20 20:51:49,820:(root) INFO : delete fd : 17, ptr : 95c7c8
+2023-07-20 20:51:49,820:(root) INFO : 7f1403880700 close one
+2023-07-20 20:51:49,820:(root) INFO : delete fd : 18, ptr : 95d318
+2023-07-20 20:51:49,821:(root) INFO : 7f140307f700 close one
+2023-07-20 20:51:49,820:(root) INFO : delete fd : 16, ptr : 95ba18
+2023-07-20 20:51:49,821:(root) INFO : 7f1404081700 close one
+2023-07-20 20:51:49,820:(root) INFO : delete fd : 15, ptr : 95aec8
+2023-07-20 20:51:49,821:(root) INFO : 7f1404882700 close one
+2023-07-20 20:51:49,820:(root) INFO : delete fd : 19, ptr : 95de68
+2023-07-20 20:51:49,821:(root) INFO : 7f140287e700 close one
+2023-07-20 20:51:49,820:(root) INFO : delete fd : 14, ptr : 95a378
+2023-07-20 20:51:49,821:(root) INFO : 7f1405083700 close one
