@@ -17,7 +17,7 @@ A WebServer written in C++, which could be suitable for beginners to learn.
 To clone the repository, you can run:
 
 ```git
-git clone https://github.com/zhangyijun666/WebServer
+git clone https://github.com/sirius-zyj/WebServer-sirius.git
 ```
 
 + ***Setup mysql***
