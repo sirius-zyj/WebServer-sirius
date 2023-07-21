@@ -10,7 +10,7 @@ A WebServer written in C++, which could be suitable for beginners to learn.
 
 ## What is the directory structure of sirius?
 
-![structure](images/2023-07-21-05-23-04.png)
+![structure](https://img1.imgtp.com/2023/07/21/lTH2sZyP.png)
 
 ## How to establish?
 
