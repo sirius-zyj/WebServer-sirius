@@ -7,7 +7,6 @@ TcpServer::TcpServer(const InetAddress &listenAddr)
  acceptor_(new Acceptor(mainLoop_->get_epollFd(), listenAddr)),
  threadpool_(new EventLoopThreadpool(mainLoop_.get()))
 {
-    HttpConn::userCount = 0;
     HttpConn::srcDir = resourcePath.c_str();//getcwd(nullptr, 256);
     
     //将new_connection注册到acceptor_上

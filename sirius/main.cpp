@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 
     //实例化服务器
     TcpServer tcpServer(listenAddr);
-    int freeKernal = int(sysconf(_SC_NPROCESSORS_ONLN)) - 1;
+    int freeKernal = int(sysconf(_SC_NPROCESSORS_ONLN)) - 2;
     log->log_info("%d kernels used",freeKernal);
     tcpServer.set_thread_nums(freeKernal);//设置线程数
     tcpServer.start();

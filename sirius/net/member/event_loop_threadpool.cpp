@@ -19,7 +19,6 @@ void EventLoopThreadpool::start(const ThreadInitCallback& cb)
         //新线程中创建event_loop,并开始循环
         subLoops_.push_back(t->creat_loop());
     }
-
 }
 
 EventLoop *EventLoopThreadpool::get_next_loop()
