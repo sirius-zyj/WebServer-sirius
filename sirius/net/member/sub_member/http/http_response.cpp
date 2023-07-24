@@ -41,22 +41,18 @@ HttpResponse::HttpResponse() {
     code_ = -1;
     path_ = srcDir_ = "";
     isKeepAlive_ = false;
-    mmFile_ = nullptr; 
     mmFileStat_ = { 0 };
 };
 
 HttpResponse::~HttpResponse() {
-    UnmapFile();
 }
 
 void HttpResponse::Init(const string& srcDir, string& path, bool isKeepAlive, int code){
     assert(srcDir != "");
-    if(mmFile_) { UnmapFile(); }
     code_ = code;
     isKeepAlive_ = isKeepAlive;
     path_ = path;
     srcDir_ = srcDir;
-    mmFile_ = nullptr; 
     mmFileStat_ = { 0 };
 }
 
@@ -75,14 +71,6 @@ void HttpResponse::MakeResponse(Buffer& buff) {
     AddStateLine_(buff);
     AddHeader_(buff);
     AddContent_(buff);
-}
-
-char* HttpResponse::File() {
-    return mmFile_;
-}
-
-size_t HttpResponse::FileLen() const {
-    return mmFileStat_.st_size;
 }
 
 void HttpResponse::ErrorHtml_() {
@@ -116,30 +104,42 @@ void HttpResponse::AddHeader_(Buffer& buff) {
 }
 
 void HttpResponse::AddContent_(Buffer& buff) {
-    int srcFd = open((srcDir_ + path_).data(), O_RDONLY);
-    if(srcFd < 0) { 
-        ErrorContent(buff, "File NotFound!");
-        return; 
+    string filePath = srcDir_ + path_;
+    RedisConnRAII redis;
+
+    file_ = redis->get(filePath);
+    if(!file_){
+        log->log_warn("Not in redis");
+        //读取文件并写入redis
+        int srcFd = open(filePath.data(), O_RDONLY);
+        if(srcFd < 0) { 
+            ErrorContent(buff, "File NotFound!");
+            return; 
+        }
+
+        /* 将文件映射到内存提高文件的访问速度 
+            MAP_PRIVATE 建立一个写入时拷贝的私有映射*/
+        int* mmRet = (int*)mmap(0, mmFileStat_.st_size, PROT_READ, MAP_PRIVATE, srcFd, 0);
+        if(*mmRet == -1) {
+            ErrorContent(buff, "File NotFound!");
+            return; 
+        }
+
+        {
+            redis->set(filePath, reinterpret_cast<char*>(mmRet));
+            redis->expire(filePath, std::chrono::seconds(60));
+            file_ = redis->get(filePath);
+        }
+
+        munmap(mmRet, mmFileStat_.st_size);
+        close(srcFd);
+    }
+    else{
+        //更新redis中的过期时间
+        redis->expire(filePath, std::chrono::seconds(60));
     }
 
-    /* 将文件映射到内存提高文件的访问速度 
-        MAP_PRIVATE 建立一个写入时拷贝的私有映射*/
-    log->log_info("file path %s", (srcDir_ + path_).data());
-    int* mmRet = (int*)mmap(0, mmFileStat_.st_size, PROT_READ, MAP_PRIVATE, srcFd, 0);
-    if(*mmRet == -1) {
-        ErrorContent(buff, "File NotFound!");
-        return; 
-    }
-    mmFile_ = (char*)mmRet;
-    close(srcFd);
     buff.append("Content-length: " + std::to_string(mmFileStat_.st_size) + "\r\n\r\n");
-}
-
-void HttpResponse::UnmapFile() {
-    if(mmFile_) {
-        munmap(mmFile_, mmFileStat_.st_size);
-        mmFile_ = nullptr;
-    }
 }
 
 string HttpResponse::GetFileType_() {

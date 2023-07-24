@@ -3,7 +3,7 @@
 using namespace sirius;
 
 EventLoopThreadpool::EventLoopThreadpool(EventLoop *eventLoop)
-: m_mainLoop(eventLoop),
+: mainLoop_(eventLoop),
   numThread_(0),//默认全为main_eventLoop在处理
   next_(0)
 {
@@ -25,7 +25,7 @@ void EventLoopThreadpool::start(const ThreadInitCallback& cb)
 EventLoop *EventLoopThreadpool::get_next_loop()
 {
     //单核cpu均用mainLoop
-    EventLoop* loop = m_mainLoop;
+    EventLoop* loop = mainLoop_;
 
     if(!subLoops_.empty()){
         loop = subLoops_[next_];

@@ -37,10 +37,10 @@ class HttpRequest
     void Init();
     bool parse(Buffer& buff);
 
-    string path() const;
-    string& path();
-    string method() const;
-    string version() const;
+    string path() const{ return path_; };
+    string& path(){ return path_; };
+    string method() const{ return method_; };
+    string version() const{ return version_; };
     string GetPost(const string& key) const;
     string GetPost(const char* key) const;
 

@@ -4,19 +4,19 @@ using namespace sirius;
 
 
 Acceptor::Acceptor(int epollFd, const InetAddress &listenAddr)
-: m_acceptorFd(socket(listenAddr.family(), SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP)),//设置非阻塞
-  m_acceptorChannel(epollFd, m_acceptorFd)
+: acceptorFd_(socket(listenAddr.family(), SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP)),//设置非阻塞
+  acceptorChannel_(epollFd, acceptorFd_)
 {
     //可复用地址
     int flag = 1;
-    setsockopt(m_acceptorFd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
+    setsockopt(acceptorFd_, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
     //绑定端口
     sockaddr_in addr = listenAddr.address();
-    int ret = bind(m_acceptorFd, (struct sockaddr *)&addr, sizeof(addr));
+    int ret = bind(acceptorFd_, (struct sockaddr *)&addr, sizeof(addr));
     assert(ret >= 0);
 
-    //将handleRead函数注册进m_acceptorChannel中
-    m_acceptorChannel.set_read_callback(
+    //将handleRead函数注册进acceptorChannel_中
+    acceptorChannel_.set_read_callback(
         std::bind(&Acceptor::handle_read, this)
     );
 }
@@ -24,9 +24,9 @@ Acceptor::Acceptor(int epollFd, const InetAddress &listenAddr)
 void Acceptor::run_listen()
 {
     //开启监听事件
-    int ret = listen(m_acceptorFd, 256);
+    int ret = listen(acceptorFd_, 256);
     assert(ret >= 0);
-    m_acceptorChannel.enable_reading();
+    acceptorChannel_.enable_reading();
 }
 
 void Acceptor::handle_read()
@@ -34,11 +34,11 @@ void Acceptor::handle_read()
     sockaddr_in clientAddr;
     socklen_t clientAddrLen = sizeof(clientAddr);
     //LT触发模式    
-    int connFd = accept(m_acceptorFd, (sockaddr*)&clientAddr, &clientAddrLen);
+    int connFd = accept(acceptorFd_, (sockaddr*)&clientAddr, &clientAddrLen);
     assert(connFd >= 0);
 
     //绑定新连接
-    if(m_newConnectionCallback)
-        m_newConnectionCallback(connFd);
+    if(newConnectionCallback_)
+        newConnectionCallback_(connFd);
 
 }

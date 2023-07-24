@@ -13,7 +13,6 @@ void HttpRequest::Init() {
     state_ = REQUEST_LINE;
     
     method_ = path_ = version_ = body_ = "";
-    // method_.clear();path_.clear();version_.clear();body_.clear();
     
     header_.clear();
     post_.clear();
@@ -36,23 +35,23 @@ bool HttpRequest::parse(Buffer& buff) {
         std::string line(buff.peek(), lineEnd);
         switch(state_)
         {
-        case REQUEST_LINE:
-            if(!ParseRequestLine_(line)) {
-                return false;
-            }
-            ParsePath_();
-            break;    
-        case HEADERS:
-            ParseHeader_(line);
-            if(buff.readable_chars() <= 2) {
-                state_ = FINISH;
-            }
-            break;
-        case BODY:
-            ParseBody_(line);
-            break;
-        default:
-            break;
+            case REQUEST_LINE:
+                if(!ParseRequestLine_(line)) {
+                    return false;
+                }
+                ParsePath_();
+                break;    
+            case HEADERS:
+                ParseHeader_(line);
+                if(buff.readable_chars() <= 2) {
+                    state_ = FINISH;
+                }
+                break;
+            case BODY:
+                ParseBody_(line);
+                break;
+            default:
+                break;
         }
         if(lineEnd == buff.begin_write()) { break; }
         buff.retrieve_until(lineEnd + 2);
@@ -118,7 +117,6 @@ void HttpRequest::ParsePost_() {
         ParseFromUrlencoded_();
         if(DEFAULT_HTML_TAG.count(path_)) {
             int tag = DEFAULT_HTML_TAG.find(path_)->second;
-            log->log_info("Tag:%d", tag);
             if(tag == 0 || tag == 1) {
                 bool isLogin = (tag == 1);
                 if(isLogin){
@@ -225,20 +223,6 @@ bool HttpRequest::UserLogin(const string &name, const string &pwd) {
     return true;
 }
 
-std::string HttpRequest::path() const{
-    return path_;
-}
-
-std::string& HttpRequest::path(){
-    return path_;
-}
-std::string HttpRequest::method() const {
-    return method_;
-}
-
-std::string HttpRequest::version() const {
-    return version_;
-}
 
 std::string HttpRequest::GetPost(const std::string& key) const {
     assert(key != "");

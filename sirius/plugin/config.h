@@ -20,5 +20,10 @@ extern const char *sqlPwd;
 extern const char *sqlDb;
 extern const int sqlMaxConn;
 
+//redis相关
+extern const char *redisHost;
+extern const int redisPort;
+extern const int redisMaxConn;
+
 #endif
 

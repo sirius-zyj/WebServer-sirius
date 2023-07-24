@@ -18,6 +18,7 @@ class SqlConnectionPool
     SqlConnectionPool() { init(); };
     SqlConnectionPool(const SqlConnectionPool&) = delete;
     SqlConnectionPool& operator=(const SqlConnectionPool&) = delete;
+ public:
     ~SqlConnectionPool(){ close_pool(); };
  public:
     static SqlConnectionPool* get_single_instance();
@@ -40,7 +41,7 @@ class SqlConnectionPool
 
 class SqlConnRAII
 {
-public:
+ public:
     SqlConnRAII()
     {
         conn_ = oneSqlConn->occupy_conn();
@@ -61,7 +62,7 @@ public:
             oneSqlConn->free_conn(conn_);
         }
     }
-private:
+ private:
     SqlConnRAII(const SqlConnRAII&) = delete;
     SqlConnRAII& operator=(const SqlConnRAII&) = delete;
     session *conn_;

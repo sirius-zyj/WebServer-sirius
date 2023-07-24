@@ -46,10 +46,22 @@ void Logger::log_warn(const char *msg, ...)
 #ifdef ENABLE_LOG_WARN
     va_list args;
     va_start(args, msg);
-    char buf[512];
-    vsprintf(buf, msg, args);
+    char buf[256];
+    int len = vsnprintf(buf, sizeof(buf), msg, args);
     va_end(args);
-    m_root.warn(std::string(buf));
+    if (len >= sizeof(buf)) {
+        // 如果输出的字符数超过缓冲区大小，则进行相应处理，比如扩大缓冲区或使用动态内存
+        int newBufferSize = len + 1;  // 加上结尾的 null 字符
+        char* newBuf = new char[newBufferSize];
+        va_list args2;
+        va_start(args2, msg);
+        vsnprintf(newBuf, newBufferSize, msg, args2);
+        va_end(args2);
+        m_root.warn(std::string(newBuf));
+        delete[] newBuf;
+    } else {
+        m_root.warn(std::string(buf));
+    }
 #endif
 }
 
@@ -58,10 +70,22 @@ void Logger::log_error(const char *msg, ...)
 #ifdef ENABLE_LOG_ERROR
     va_list args;
     va_start(args, msg);
-    char buf[512];
-    vsprintf(buf, msg, args);
+    char buf[256];
+    int len = vsnprintf(buf, sizeof(buf), msg, args);
     va_end(args);
-    m_root.error(std::string(buf));
+    if (len >= sizeof(buf)) {
+        // 如果输出的字符数超过缓冲区大小，则进行相应处理，比如扩大缓冲区或使用动态内存
+        int newBufferSize = len + 1;  // 加上结尾的 null 字符
+        char* newBuf = new char[newBufferSize];
+        va_list args2;
+        va_start(args2, msg);
+        vsnprintf(newBuf, newBufferSize, msg, args2);
+        va_end(args2);
+        m_root.error(std::string(newBuf));
+        delete[] newBuf;
+    } else {
+        m_root.error(std::string(buf));
+    }
 #endif
 }
 
@@ -70,9 +94,21 @@ void Logger::log_info(const char *msg, ...)
 #ifdef ENABLE_LOG_INFO
     va_list args;
     va_start(args, msg);
-    char buf[512];
-    vsprintf(buf, msg, args);
+    char buf[256];
+    int len = vsnprintf(buf, sizeof(buf), msg, args);
     va_end(args);
-    m_root.info(std::string(buf));
+    if (len >= sizeof(buf)) {
+        // 如果输出的字符数超过缓冲区大小，则进行相应处理，比如扩大缓冲区或使用动态内存
+        int newBufferSize = len + 1;  // 加上结尾的 null 字符
+        char* newBuf = new char[newBufferSize];
+        va_list args2;
+        va_start(args2, msg);
+        vsnprintf(newBuf, newBufferSize, msg, args2);
+        va_end(args2);
+        m_root.info(std::string(newBuf));
+        delete[] newBuf;
+    } else {
+        m_root.info(std::string(buf));
+    }
 #endif
 }

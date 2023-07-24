@@ -7,6 +7,7 @@
 
 #include "plugin/head.h"
 #include "plugin/buffer/buffer.h"
+#include "net/redis_connection_pool.h"
 
 namespace sirius
 {
@@ -18,9 +19,8 @@ class HttpResponse
 
     void Init(const std::string& srcDir, std::string& path, bool isKeepAlive = false, int code = -1);
     void MakeResponse(Buffer& buff);
-    void UnmapFile();
-    char* File();
-    size_t FileLen() const;
+    const char* File(){ return file_.value().c_str(); };
+    size_t FileLen() const{ return mmFileStat_.st_size; };
     void ErrorContent(Buffer& buff, std::string message);
     int Code() const { return code_; }
 
@@ -38,7 +38,7 @@ class HttpResponse
     std::string path_;
     std::string srcDir_;
     
-    char* mmFile_; 
+    sw::redis::OptionalString file_;
     struct stat mmFileStat_;
 
     static const unordered_map<string, string> SUFFIX_TYPE;

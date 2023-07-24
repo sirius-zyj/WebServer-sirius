@@ -21,7 +21,7 @@ public:
     Acceptor(int epollFd, const InetAddress& listenAddr);
 
     void set_new_connection_callback(const NewConnectionCallback& cb){
-        m_newConnectionCallback = cb;
+        newConnectionCallback_ = cb;
     };
     void run_listen();
 
@@ -30,10 +30,10 @@ private:
 
 
 private:
-    int m_acceptorFd;
-    Channel m_acceptorChannel;
+    int acceptorFd_;
+    Channel acceptorChannel_;
 
-    NewConnectionCallback m_newConnectionCallback;
+    NewConnectionCallback newConnectionCallback_;
 
 };
 

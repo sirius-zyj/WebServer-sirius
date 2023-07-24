@@ -24,16 +24,19 @@ include_directories(${PROJECT_SOURCE_DIR}
                     ${PROJECT_SOURCE_DIR}/net/member/sub_member/http
                     ${PROJECT_SOURCE_DIR}/plugin
                     ${PROJECT_SOURCE_DIR}/plugin/soci/include
+                    ${PROJECT_SOURCE_DIR}/plugin/redis/include
+                    ${PROJECT_SOURCE_DIR}/plugin/redis/include/sw/redis++
                     ${PROJECT_SOURCE_DIR}/plugin/log
                     ${PROJECT_SOURCE_DIR}/plugin/buffer)
 
 find_library(SOCI_LIB soci_core PATHS ${PROJECT_SOURCE_DIR}/plugin/soci/lib)
 find_library(LOG4CPP_LIB log4cpp PATHS ${PROJECT_SOURCE_DIR}/plugin/log/lib)
-                    
+find_library(REDIS_LIB redis++ PATHS ${PROJECT_SOURCE_DIR}/plugin/redis/lib)
+
 
 #set output path
 set(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR})
 
 #exe
 add_executable(main ${SRC_LIST})
-target_link_libraries(main pthread mysqlclient ${LOG4CPP_LIB} ${SOCI_LIB})
+target_link_libraries(main pthread mysqlclient ${LOG4CPP_LIB} ${SOCI_LIB} ${REDIS_LIB})

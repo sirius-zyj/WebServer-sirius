@@ -3,11 +3,9 @@
 using namespace sirius;
 
 const char* HttpConn::srcDir;
-std::atomic<int> HttpConn::userCount;
 
 void HttpConn::init()
 {
-    ++userCount;
     readBuffer_.retrieve_all();
     writeBuffer_.retrieve_all();
     isClose_ = false;
@@ -76,7 +74,7 @@ bool HttpConn::process()
     iovCnt_ = 1;
 
     if(response_.FileLen() > 0 && response_.File()){
-        iov_[1].iov_base = response_.File();
+        iov_[1].iov_base = const_cast<char*>(response_.File());
         iov_[1].iov_len = response_.FileLen();
         iovCnt_ = 2;
     }

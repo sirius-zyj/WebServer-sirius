@@ -27,7 +27,6 @@ class HttpConn
 
  public:
     static const char* srcDir;
-    static std::atomic<int> userCount;
  
  private:
     int fd_;

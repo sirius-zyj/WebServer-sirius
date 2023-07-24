@@ -19,7 +19,7 @@ TcpServer::TcpServer(const InetAddress &listenAddr)
 void TcpServer::set_thread_nums(int numThread)
 {
     assert(numThread >= 0);
-    threadpool_->set_thread_unm(numThread);
+    threadpool_->set_thread_num(numThread);
 }
 
 void TcpServer::start()
