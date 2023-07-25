@@ -1,17 +1,18 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
-#include <include/Category.hh>
-#include <include/FileAppender.hh>
-#include <include/OstreamAppender.hh>
-#include <include/PatternLayout.hh>
-#include <include/Priority.hh>
+#include <include/log4cpp/Category.hh>
+#include <include/log4cpp/FileAppender.hh>
+#include <include/log4cpp/OstreamAppender.hh>
+#include <include/log4cpp/PatternLayout.hh>
+#include <include/log4cpp/Priority.hh>
 
 #include <plugin/config.h>
 
 using namespace log4cpp;
 
-#define log Logger::get_single_instance() 
+#define Log Logger::get_single_instance() 
+
 namespace sirius
 {
 class Logger

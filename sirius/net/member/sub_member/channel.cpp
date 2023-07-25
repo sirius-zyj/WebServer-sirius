@@ -40,11 +40,11 @@ void Channel::update()
         event.events = m_event;
         event.data.ptr = static_cast<void*>(this);
         if(epoll_ctl(epollFd_, EPOLL_CTL_ADD, fd_, &event) == -1){
-            log->log_error("connect err");
+            Log->log_error("connect err");
             return;
         };
         m_updateIndex = kAdded;
-        log->log_info("append fd : %d, ptr : %lx", fd_, event.data.ptr);
+        Log->log_info("append fd : %d, ptr : %lx", fd_, event.data.ptr);
     }
     //更改或删除
     else{
@@ -53,13 +53,13 @@ void Channel::update()
             event.events = m_event;
             event.data.ptr = static_cast<void*>(this);
             if(epoll_ctl(epollFd_, EPOLL_CTL_DEL, fd_, &event) == -1){//将fd从epoll中删除
-                if(errno == ENOENT) log->log_warn("no register fd %d", fd_);
+                if(errno == ENOENT) Log->log_warn("no register fd %d", fd_);
                 close(fd_);//关闭文件描述符
-                log->log_error("delete err beacuse %s", strerror(errno));
+                Log->log_error("delete err beacuse %s", strerror(errno));
                 return;
             };
             close(fd_);//关闭文件描述符
-            log->log_info("delete fd : %d, ptr : %lx", fd_, event.data.ptr);
+            Log->log_info("delete fd : %d, ptr : %lx", fd_, event.data.ptr);
             m_updateIndex = kDeleted;
         }
         else{
@@ -67,10 +67,10 @@ void Channel::update()
             event.events = m_event;
             event.data.ptr = static_cast<void*>(this);
             if(epoll_ctl(epollFd_, EPOLL_CTL_MOD, fd_, &event) == -1){//更改fd在epoll中的事件
-                log->log_error("modify err");
+                Log->log_error("modify err");
                 return;
             };
-            log->log_info("modify fd : %d, ptr : %lx", fd_, event.data.ptr);
+            Log->log_info("modify fd : %d, ptr : %lx", fd_, event.data.ptr);
         }
     }
 }

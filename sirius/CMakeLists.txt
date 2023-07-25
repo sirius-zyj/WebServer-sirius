@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.1)
 project(muduo)
 #set c++ version
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
 #set source path
@@ -25,18 +25,19 @@ include_directories(${PROJECT_SOURCE_DIR}
                     ${PROJECT_SOURCE_DIR}/plugin
                     ${PROJECT_SOURCE_DIR}/plugin/soci/include
                     ${PROJECT_SOURCE_DIR}/plugin/redis/include
+                    ${PROJECT_SOURCE_DIR}/plugin/redis/hiredis/include
                     ${PROJECT_SOURCE_DIR}/plugin/redis/include/sw/redis++
                     ${PROJECT_SOURCE_DIR}/plugin/log
+                    ${PROJECT_SOURCE_DIR}/plugin/log/include
                     ${PROJECT_SOURCE_DIR}/plugin/buffer)
 
 find_library(SOCI_LIB soci_core PATHS ${PROJECT_SOURCE_DIR}/plugin/soci/lib)
 find_library(LOG4CPP_LIB log4cpp PATHS ${PROJECT_SOURCE_DIR}/plugin/log/lib)
 find_library(REDIS_LIB redis++ PATHS ${PROJECT_SOURCE_DIR}/plugin/redis/lib)
 
-
 #set output path
 set(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR})
 
-#exe
+#ex
 add_executable(main ${SRC_LIST})
 target_link_libraries(main pthread mysqlclient ${LOG4CPP_LIB} ${SOCI_LIB} ${REDIS_LIB})

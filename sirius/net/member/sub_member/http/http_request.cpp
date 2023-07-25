@@ -56,7 +56,7 @@ bool HttpRequest::parse(Buffer& buff) {
         if(lineEnd == buff.begin_write()) { break; }
         buff.retrieve_until(lineEnd + 2);
     }
-    log->log_info("[%s], [%s], [%s]", method_.c_str(), path_.c_str(), version_.c_str());
+    Log->log_info("[%s], [%s], [%s]", method_.c_str(), path_.c_str(), version_.c_str());
     return true;
 }
 
@@ -84,7 +84,7 @@ bool HttpRequest::ParseRequestLine_(const string& line) {
         state_ = HEADERS;
         return true;
     }
-    log->log_error("RequestLine Error");
+    Log->log_error("RequestLine Error");
     return false;
 }
 
@@ -103,7 +103,7 @@ void HttpRequest::ParseBody_(const string& line) {
     body_ = line;
     ParsePost_();
     state_ = FINISH;
-    log->log_info("Body:%s, len:%d", line.c_str(), line.size());
+    Log->log_info("Body:%s, len:%d", line.c_str(), line.size());
 }
 
 int HttpRequest::ConverHex(char ch) {
@@ -158,7 +158,7 @@ void HttpRequest::ParseFromUrlencoded_() {
             value = body_.substr(j, i - j);
             j = i + 1;
             post_[key] = value;
-            log->log_info("%s = %s", key.c_str(), value.c_str());
+            Log->log_info("%s = %s", key.c_str(), value.c_str());
             break;
         default:
             break;
@@ -174,7 +174,7 @@ void HttpRequest::ParseFromUrlencoded_() {
 bool HttpRequest::UserRegister(const string &name, const string &pwd)
 {
     if(name == "" || pwd == "") { return false; }
-    log->log_info("Login name:%s pwd:%s", name.c_str(), pwd.c_str());
+    Log->log_info("Login name:%s pwd:%s", name.c_str(), pwd.c_str());
 
     SqlConnRAII sql;
 
@@ -182,23 +182,23 @@ bool HttpRequest::UserRegister(const string &name, const string &pwd)
     string selectPwd;
     sql << "SELECT password FROM user WHERE username = :name LIMIT 1",into(selectPwd), use(name);
     if(selectPwd != ""){//用户名已存在
-        log->log_info("User has existed!");
+        Log->log_info("User has existed!");
         return false;
     }
 
     /* 注册行为 */
     soci::statement st = (sql->prepare << "INSERT INTO user(username, password) VALUES(:name,:pwd)", use(name), use(pwd));
     if(st.execute()) { 
-        log->log_error( "Insert error!");
+        Log->log_error( "Insert error!");
         return false;
     }
-    log->log_info("Register success!");
+    Log->log_info("Register success!");
     return true;
 }
 
 bool HttpRequest::UserLogin(const string &name, const string &pwd) {
     if(name == "" || pwd == "") { return false; }
-    log->log_info("Login name:%s pwd:%s", name.c_str(), pwd.c_str());
+    Log->log_info("Login name:%s pwd:%s", name.c_str(), pwd.c_str());
 
     SqlConnRAII sql;
 
@@ -208,15 +208,15 @@ bool HttpRequest::UserLogin(const string &name, const string &pwd) {
     
     /* 登录行为 */
     if(selectPwd == "") {//用户名不存在
-        log->log_info("User does not has existed!");
+        Log->log_info("User does not has existed!");
         return false;
     }
     else if(pwd == selectPwd) { //密码正确
-        log->log_info("Login success!");
+        Log->log_info("Login success!");
         return true; 
     }
     else {//密码错误
-        log->log_info("pwd error!");
+        Log->log_info("pwd error!");
         return false;
     }
     

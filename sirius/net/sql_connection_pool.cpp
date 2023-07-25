@@ -52,5 +52,5 @@ void SqlConnectionPool::close_pool()
         delete conn;
         conn = nullptr;
     }
-    log->log_info("sql connection pool closed");
+    Log->log_info("sql connection pool closed");
 }

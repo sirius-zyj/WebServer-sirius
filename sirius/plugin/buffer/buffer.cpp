@@ -34,7 +34,7 @@ ssize_t Buffer::read_fd(int fd)
 
     const ssize_t len = readv(fd, vec, 2);
     if(len < 0){
-        // log->log_error("readv error %s", strerror(errno));
+        // Log->log_error("readv error %s", strerror(errno));
         return -1;
     } 
     else if(static_cast<size_t>(len) < writable){
@@ -52,7 +52,7 @@ ssize_t Buffer::write_fd(int fd)
 {
     ssize_t len = write(fd, begin() + readIndex_, readable_chars());
     if(len < 0){
-        log->log_error("write error %s", strerror(errno));
+        Log->log_error("write error %s", strerror(errno));
         return -1;
     }
     readIndex_ += len;

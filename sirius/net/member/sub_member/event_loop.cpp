@@ -35,7 +35,7 @@ void EventLoop::add_tcpConnection(int fd)
         unique_lock<mutex> lock(mtx_);//conns_上锁
         if(conns_.find(conn->get_sockFd()) != conns_.end()){
             erase_tcpConnection(conns_.at(conn->get_sockFd()));//万一存在之前未清理的conn
-            log->log_warn("%lx close one", pthread_self());
+            Log->log_warn("%lx close one", pthread_self());
         }
         conn->set_close_callback(std::bind(&EventLoop::erase_tcpConnection, this, _1));
         conns_[conn->get_sockFd()] = conn;

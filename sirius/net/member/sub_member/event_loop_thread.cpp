@@ -53,4 +53,5 @@ void *EventLoopThread::worker(void *arg)
 
     unique_lock<mutex> lock(thread->mtx_);
     thread->loop_ = nullptr;
+    return nullptr;
 }

@@ -50,5 +50,5 @@ void RedisConnectionPool::close_pool()
         delete conn;
         conn = nullptr;
     }
-    log->log_info("redis connection pool closed");
+    Log->log_info("redis connection pool closed");
 }

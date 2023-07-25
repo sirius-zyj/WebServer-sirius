@@ -15,7 +15,7 @@ ssize_t HttpConn::read()
 {
     ssize_t len = readBuffer_.read_fd(fd_);
     if(len < 0){
-        log->log_error("read error %s", strerror(errno));
+        Log->log_error("read error %s", strerror(errno));
         return -1;
     }
     return len;
@@ -30,7 +30,7 @@ ssize_t HttpConn::write()
             if(errno == EAGAIN){//当前暂时无法写入
                 return -2;
             }
-            log->log_error("write error %s", strerror(errno));
+            Log->log_error("write error %s", strerror(errno));
             return -1;
         }
         if(iov_[0].iov_len + iov_[1].iov_len == 0){
@@ -78,7 +78,7 @@ bool HttpConn::process()
         iov_[1].iov_len = response_.FileLen();
         iovCnt_ = 2;
     }
-    log->log_info("filesize:%d, %d  to %d", response_.FileLen(), iovCnt_, iov_[0].iov_len);
+    Log->log_info("filesize:%d, %d  to %d", response_.FileLen(), iovCnt_, iov_[0].iov_len);
     return true;
 
 }

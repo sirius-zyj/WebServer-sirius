@@ -109,7 +109,7 @@ void HttpResponse::AddContent_(Buffer& buff) {
 
     file_ = redis->get(filePath);
     if(!file_){
-        log->log_warn("Not in redis");
+        Log->log_warn("Not in redis");
         //读取文件并写入redis
         int srcFd = open(filePath.data(), O_RDONLY);
         if(srcFd < 0) { 

@@ -45,11 +45,11 @@ void TcpConnection::handle_read()
     int len = httpConn_.read();
     
     if(len < 0){
-        log->log_error("%lx recv error %s", pthread_self(), strerror(errno));
+        Log->log_error("%lx recv error %s", pthread_self(), strerror(errno));
         handle_close();
     }
     else if (len == 0){//没有可读的数据了
-        log->log_info("%lx recv none", pthread_self());
+        Log->log_info("%lx recv none", pthread_self());
         handle_close();
     } else {
         // 处理数据
@@ -63,7 +63,7 @@ void TcpConnection::handle_write()
     int ret = httpConn_.write();
     if(httpConn_.writeable_chars() == 0){
         if(httpConn_.is_alived()){
-            log->log_info("%lx is alived , enable reading", pthread_self());
+            Log->log_info("%lx is alived , enable reading", pthread_self());
             m_channel.enable_reading();
             return;
         }
@@ -80,7 +80,7 @@ void TcpConnection::handle_close()
 {
     shared_ptr<TcpConnection> conn = shared_from_this();
     closeCB_(conn);
-    log->log_info("%lx close one", pthread_self());
+    Log->log_info("%lx close one", pthread_self());
 }
 
 void TcpConnection::handle_process()

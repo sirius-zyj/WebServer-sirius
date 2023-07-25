@@ -46,7 +46,7 @@ void TcpServer::new_connection(int sockFd)
         ioLoop->add_tcpConnection(sockFd);
     }
     catch (const std::runtime_error& err) {
-        log->log_error(err.what());
+        Log->log_error(err.what());
     }
 }
 

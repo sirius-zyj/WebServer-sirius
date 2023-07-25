@@ -15,6 +15,7 @@
 #include <semaphore.h>
 #include <regex>
 #include <list>
+#include <functional>
 
 #include "log/logger.h"
 #include "config.h"
