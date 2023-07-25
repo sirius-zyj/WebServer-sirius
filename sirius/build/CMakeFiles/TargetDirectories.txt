@@ -1,3 +1,0 @@
-/home/zhangyijun/Documents/network/sirius/build/CMakeFiles/main.dir
-/home/zhangyijun/Documents/network/sirius/build/CMakeFiles/edit_cache.dir
-/home/zhangyijun/Documents/network/sirius/build/CMakeFiles/rebuild_cache.dir

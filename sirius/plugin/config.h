@@ -4,9 +4,9 @@
 #include <string>
 using std::string;
 
-#define ENABLE_LOG_INFO
-#define ENABLE_LOG_WARN
-#define ENABLE_LOG_ERROR
+// #define ENABLE_LOG_INFO
+// #define ENABLE_LOG_WARN
+// #define ENABLE_LOG_ERROR
 
 
 extern const string resourcePath;//只会被定义一次
